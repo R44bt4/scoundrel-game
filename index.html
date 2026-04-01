@@ -407,6 +407,70 @@
       background: #1a5276;
       border-color: #2980b9;
     }
+
+    /* Pixel art tombstone */
+    .pixel-tombstone {
+      display: inline-block;
+      width: 64px;
+      height: 80px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .pixel-tombstone::before {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 56px;
+      background: #555;
+      border-radius: 24px 24px 0 0;
+      margin: 0 auto;
+      box-shadow: inset 0 0 0 4px #444;
+    }
+
+    .pixel-tombstone::after {
+      content: 'RIP';
+      display: block;
+      width: 48px;
+      text-align: center;
+      font-size: 10px;
+      color: #333;
+      margin: -36px auto 0;
+      position: relative;
+    }
+
+    /* Pixel art treasure chest */
+    .pixel-chest {
+      display: inline-block;
+      width: 64px;
+      height: 56px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .pixel-chest::before {
+      content: '';
+      display: block;
+      width: 64px;
+      height: 32px;
+      background: #8B4513;
+      border-radius: 4px 4px 0 0;
+      box-shadow: inset 0 -4px 0 #654321;
+    }
+
+    .pixel-chest::after {
+      content: '';
+      display: block;
+      width: 64px;
+      height: 24px;
+      background: #A0522D;
+      border-radius: 0 0 4px 4px;
+      box-shadow: inset 0 4px 0 #654321;
+    }
+
+    .card.monster { box-shadow: 0 0 8px rgba(233, 69, 96, 0.2); }
+    .card.weapon { box-shadow: 0 0 8px rgba(42, 74, 92, 0.3); }
+    .card.potion { box-shadow: 0 0 8px rgba(92, 42, 92, 0.3); }
   </style>
 </head>
 <body>
@@ -906,7 +970,7 @@
         }
         document.getElementById('game-over-title').textContent = 'VICTORY';
         document.getElementById('game-over-title').style.color = '#4ae945';
-        document.getElementById('game-over-art').textContent = '👑';
+        document.getElementById('game-over-art').innerHTML = '<div class="pixel-chest"></div>';
         document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
       } else {
         // Death: score = health - remaining monsters in dungeon and room
@@ -924,7 +988,7 @@
         state.score = state.health - remainingMonsters;
         document.getElementById('game-over-title').textContent = 'YOU DIED';
         document.getElementById('game-over-title').style.color = '#e94560';
-        document.getElementById('game-over-art').textContent = '💀';
+        document.getElementById('game-over-art').innerHTML = '<div class="pixel-tombstone"></div>';
         document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
       }
 

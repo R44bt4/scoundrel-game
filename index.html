@@ -640,6 +640,98 @@
     }
 
     // ============================================
+    // DRAG AND DROP
+    // ============================================
+
+    let dragState = null; // { card, cardIndex, element, offsetX, offsetY, originalRect }
+
+    function onPointerDown(e) {
+      if (state.gameOver) return;
+      const cardEl = e.target.closest('.card');
+      if (!cardEl || !cardEl.parentElement || cardEl.parentElement.id !== 'room') return;
+
+      const cardIndex = Array.from(cardEl.parentElement.children).indexOf(cardEl);
+      const card = state.room[cardIndex];
+      const rect = cardEl.getBoundingClientRect();
+
+      // Create a floating copy
+      const clone = cardEl.cloneNode(true);
+      clone.classList.add('dragging');
+      clone.style.width = rect.width + 'px';
+      clone.style.height = rect.height + 'px';
+      clone.style.left = rect.left + 'px';
+      clone.style.top = rect.top + 'px';
+      document.body.appendChild(clone);
+
+      // Hide original
+      cardEl.style.visibility = 'hidden';
+
+      dragState = {
+        card,
+        cardIndex,
+        originalEl: cardEl,
+        element: clone,
+        offsetX: e.clientX - rect.left,
+        offsetY: e.clientY - rect.top
+      };
+
+      updateDropZones(card);
+      e.preventDefault();
+    }
+
+    function onPointerMove(e) {
+      if (!dragState) return;
+      dragState.element.style.left = (e.clientX - dragState.offsetX) + 'px';
+      dragState.element.style.top = (e.clientY - dragState.offsetY) + 'px';
+
+      // Check hover over drop zones
+      const zones = document.querySelectorAll('.drop-zone.valid');
+      for (const zone of zones) {
+        const rect = zone.getBoundingClientRect();
+        const over = e.clientX >= rect.left && e.clientX <= rect.right &&
+                     e.clientY >= rect.top && e.clientY <= rect.bottom;
+        zone.classList.toggle('hover', over);
+      }
+      e.preventDefault();
+    }
+
+    function onPointerUp(e) {
+      if (!dragState) return;
+
+      // Check if dropped on a valid zone
+      const zones = document.querySelectorAll('.drop-zone.valid');
+      let dropped = false;
+      for (const zone of zones) {
+        const rect = zone.getBoundingClientRect();
+        const over = e.clientX >= rect.left && e.clientX <= rect.right &&
+                     e.clientY >= rect.top && e.clientY <= rect.bottom;
+        if (over) {
+          handleDrop(dragState.card, dragState.cardIndex, zone.dataset.action);
+          dropped = true;
+          break;
+        }
+      }
+
+      // Clean up
+      dragState.element.remove();
+      if (!dropped) {
+        dragState.originalEl.style.visibility = 'visible';
+      }
+      dragState = null;
+      updateDropZones(null);
+      e.preventDefault();
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+
+    function handleDrop(card, cardIndex, action) {
+      // Implemented in Task 5
+      console.log('Drop:', cardLabel(card), card.suit, '->', action);
+    }
+
+    // ============================================
     // INIT
     // ============================================
 

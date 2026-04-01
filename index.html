@@ -28,6 +28,7 @@
       user-select: none;
       -webkit-user-select: none;
       image-rendering: pixelated;
+      touch-action: none;
     }
 
     /* HUD */
@@ -522,7 +523,8 @@
         gameOver: false,
         score: null,
         lastCardWasPotion: false,
-        lastPotionValue: 0
+        lastPotionValue: 0,
+        dealing: false
       };
     }
 
@@ -609,6 +611,7 @@
     }
 
     async function dealRoom() {
+      state.dealing = true;
       const needed = 4 - state.room.length;
       for (let i = 0; i < needed; i++) {
         if (state.dungeon.length === 0) break;
@@ -621,6 +624,7 @@
         lastCard.classList.add('flipping');
         await delay(200);
       }
+      state.dealing = false;
       render();
       updateDropZones(null);
     }
@@ -695,7 +699,7 @@
     let dragState = null; // { card, cardIndex, element, offsetX, offsetY, originalRect }
 
     function onPointerDown(e) {
-      if (state.gameOver) return;
+      if (state.gameOver || state.dealing) return;
       const cardEl = e.target.closest('.card');
       if (!cardEl || !cardEl.parentElement || cardEl.parentElement.id !== 'room') return;
 

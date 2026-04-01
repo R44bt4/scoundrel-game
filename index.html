@@ -628,15 +628,64 @@
     function updateDropZones(draggedCard) {
       const dropZones = document.getElementById('drop-zones');
       dropZones.innerHTML = '';
+
       if (!draggedCard) {
-        // Show empty state
         const placeholder = document.createElement('div');
         placeholder.className = 'drop-zone';
         placeholder.textContent = 'DRAG A CARD';
         dropZones.appendChild(placeholder);
         return;
       }
-      // Populated in Task 5
+
+      const type = cardType(draggedCard);
+      const val = cardValue(draggedCard);
+
+      if (type === 'monster') {
+        // Fight barehanded — always available
+        const bareZone = document.createElement('div');
+        bareZone.className = 'drop-zone valid';
+        bareZone.dataset.action = 'fight-bare';
+        bareZone.textContent = `FIGHT BARE (-${val} HP)`;
+        dropZones.appendChild(bareZone);
+
+        // Fight with weapon — available if weapon equipped and constraint met
+        if (state.weapon) {
+          const canUse = state.weaponLastSlain === null || val <= state.weaponLastSlain;
+          const weaponVal = cardValue(state.weapon);
+          const dmg = Math.max(0, val - weaponVal);
+          const wepZone = document.createElement('div');
+          wepZone.dataset.action = 'fight-weapon';
+          if (canUse) {
+            wepZone.className = 'drop-zone valid';
+            wepZone.textContent = dmg > 0 ? `USE WEAPON (-${dmg} HP)` : `USE WEAPON (NO DMG)`;
+          } else {
+            wepZone.className = 'drop-zone invalid';
+            wepZone.textContent = `WEAPON (TOO STRONG)`;
+          }
+          dropZones.appendChild(wepZone);
+        }
+      } else if (type === 'weapon') {
+        const equipZone = document.createElement('div');
+        equipZone.className = 'drop-zone valid';
+        equipZone.dataset.action = 'equip';
+        equipZone.textContent = 'EQUIP WEAPON';
+        dropZones.appendChild(equipZone);
+      } else if (type === 'potion') {
+        if (state.potionUsedThisTurn) {
+          const discardZone = document.createElement('div');
+          discardZone.className = 'drop-zone valid';
+          discardZone.dataset.action = 'discard-potion';
+          discardZone.textContent = 'DISCARD (ALREADY HEALED)';
+          dropZones.appendChild(discardZone);
+        } else {
+          const heal = Math.min(val, 20 - state.health);
+          const drinkZone = document.createElement('div');
+          drinkZone.className = 'drop-zone valid';
+          drinkZone.dataset.action = 'drink';
+          drinkZone.textContent = heal > 0 ? `DRINK (+${heal} HP)` : 'DRINK (HP FULL)';
+          dropZones.appendChild(drinkZone);
+        }
+      }
     }
 
     // ============================================
@@ -727,8 +776,106 @@
     document.addEventListener('pointerup', onPointerUp);
 
     function handleDrop(card, cardIndex, action) {
-      // Implemented in Task 5
-      console.log('Drop:', cardLabel(card), card.suit, '->', action);
+      // Remove card from room
+      state.room.splice(cardIndex, 1);
+      state.cardsPickedThisTurn++;
+      state.lastCardWasPotion = false;
+
+      switch (action) {
+        case 'fight-bare': {
+          state.health -= cardValue(card);
+          state.discard.push(card);
+          showFloatText(`-${cardValue(card)}`, 'damage');
+          break;
+        }
+        case 'fight-weapon': {
+          const dmg = Math.max(0, cardValue(card) - cardValue(state.weapon));
+          if (dmg > 0) {
+            state.health -= dmg;
+            showFloatText(`-${dmg}`, 'damage');
+          }
+          state.weaponSlain.push(card);
+          state.weaponLastSlain = cardValue(card);
+          break;
+        }
+        case 'equip': {
+          // Discard old weapon + slain pile
+          if (state.weapon) {
+            state.discard.push(state.weapon);
+            state.discard.push(...state.weaponSlain);
+          }
+          state.weapon = card;
+          state.weaponSlain = [];
+          state.weaponLastSlain = null;
+          break;
+        }
+        case 'drink': {
+          const heal = Math.min(cardValue(card), 20 - state.health);
+          state.health += heal;
+          state.potionUsedThisTurn = true;
+          state.discard.push(card);
+          state.lastCardWasPotion = true;
+          state.lastPotionValue = cardValue(card);
+          if (heal > 0) showFloatText(`+${heal}`, 'heal');
+          break;
+        }
+        case 'discard-potion': {
+          state.discard.push(card);
+          break;
+        }
+      }
+
+      // Check death
+      if (state.health <= 0) {
+        endGame(false);
+        return;
+      }
+
+      // Turn complete when 1 card remains in room (or 0 if room started with 1)
+      if (state.room.length <= 1) {
+        if (state.room.length === 0 && state.dungeon.length === 0) {
+          // No cards left anywhere — victory
+          endGame(true);
+        } else {
+          endTurn();
+        }
+        return;
+      }
+
+      render();
+    }
+
+    function showFloatText(text, type) {
+      const el = document.createElement('div');
+      el.className = `float-text ${type}`;
+      el.textContent = text;
+      // Position near health display
+      const hud = document.getElementById('health-display');
+      const rect = hud.getBoundingClientRect();
+      el.style.left = rect.left + 'px';
+      el.style.top = (rect.bottom + 8) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    }
+
+    async function endTurn() {
+      // Placeholder — implemented in Task 6
+      state.potionUsedThisTurn = false;
+      state.cardsPickedThisTurn = 0;
+      render();
+      await delay(400);
+      await dealRoom();
+      render();
+    }
+
+    function endGame(victory) {
+      // Placeholder — implemented in Task 7
+      state.gameOver = true;
+      state.score = victory ? state.health : state.health;
+      document.getElementById('game-over-title').textContent = victory ? 'VICTORY' : 'YOU DIED';
+      document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
+      render();
+      document.getElementById('game-over').classList.remove('hidden');
     }
 
     // ============================================

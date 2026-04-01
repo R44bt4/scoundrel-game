@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoundrel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background: #1a1a2e;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      -webkit-user-select: none;
+      image-rendering: pixelated;
+    }
+
+    /* HUD */
+    #hud {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #16213e;
+      border-bottom: 4px solid #0f3460;
+      font-size: 10px;
+    }
+
+    #health-display {
+      color: #e94560;
+    }
+
+    #title {
+      color: #eee;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    #deck-display {
+      color: #a8a8a8;
+    }
+
+    /* Room */
+    #room-label {
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+      font-size: 8px;
+      color: #555;
+      margin-top: 16px;
+      letter-spacing: 2px;
+    }
+
+    #room {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      min-height: 160px;
+      align-items: center;
+    }
+
+    /* Cards */
+    .card {
+      width: 80px;
+      height: 120px;
+      border: 3px solid #333;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      cursor: grab;
+      position: relative;
+      transition: transform 0.1s;
+      flex-shrink: 0;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #888;
+    }
+
+    .card.dragging {
+      opacity: 0.7;
+      cursor: grabbing;
+      z-index: 1000;
+      position: fixed;
+      pointer-events: none;
+      transform: rotate(5deg) scale(1.05);
+    }
+
+    .card.monster {
+      background: #2d1b1b;
+      border-color: #5c2a2a;
+    }
+
+    .card.weapon {
+      background: #1b2d3d;
+      border-color: #2a4a5c;
+    }
+
+    .card.potion {
+      background: #2d1b2d;
+      border-color: #5c2a5c;
+    }
+
+    .card .card-value {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .card .card-suit {
+      font-size: 24px;
+      margin: 4px 0;
+    }
+
+    .card .card-type {
+      font-size: 6px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-back {
+      width: 80px;
+      height: 120px;
+      background: #16213e;
+      border: 3px solid #0f3460;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-back::after {
+      content: '?';
+      font-size: 24px;
+      color: #0f3460;
+    }
+
+    /* Card flip animation */
+    @keyframes card-flip {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    .card.flipping {
+      animation: card-flip 0.3s ease-out;
+    }
+
+    /* Middle area */
+    #middle {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 8px 16px;
+      max-width: 700px;
+      width: 100%;
+      min-height: 180px;
+    }
+
+    #weapon-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+    }
+
+    #weapon-label {
+      font-size: 7px;
+      color: #555;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    #weapon-slot {
+      position: relative;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .weapon-card {
+      width: 80px;
+      height: 120px;
+      border: 3px solid #2a4a5c;
+      border-radius: 4px;
+      background: #1b2d3d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .weapon-card .card-value {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .weapon-card .card-suit {
+      font-size: 24px;
+      margin: 4px 0;
+    }
+
+    .slain-monster {
+      width: 76px;
+      height: 24px;
+      border: 2px solid #5c2a2a;
+      border-radius: 2px;
+      background: #2d1b1b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      margin-top: -4px;
+      position: relative;
+    }
+
+    #weapon-constraint {
+      font-size: 6px;
+      color: #666;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* Drop zones */
+    #drop-zones {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      min-width: 180px;
+    }
+
+    .drop-zone {
+      padding: 14px 16px;
+      border: 3px dashed #333;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 8px;
+      color: #555;
+      transition: all 0.15s;
+      letter-spacing: 1px;
+    }
+
+    .drop-zone.valid {
+      border-color: #2a5c2a;
+      color: #4a8;
+    }
+
+    .drop-zone.valid.hover {
+      border-color: #4a8;
+      background: rgba(68, 170, 136, 0.15);
+      color: #6fc;
+      box-shadow: 0 0 12px rgba(68, 170, 136, 0.3);
+    }
+
+    .drop-zone.invalid {
+      border-color: #5c2a2a;
+      color: #633;
+    }
+
+    .drop-zone.hidden {
+      display: none;
+    }
+
+    /* Action bar */
+    #action-bar {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #16213e;
+      border-top: 4px solid #0f3460;
+      position: fixed;
+      bottom: 0;
+    }
+
+    #avoid-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: 8px 16px;
+      background: #0f3460;
+      color: #eee;
+      border: 3px solid #1a5276;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 1px;
+    }
+
+    #avoid-btn:hover:not(:disabled) {
+      background: #1a5276;
+      border-color: #2980b9;
+    }
+
+    #avoid-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    #turn-info {
+      font-size: 8px;
+      color: #888;
+    }
+
+    /* Floating damage/heal numbers */
+    .float-text {
+      position: fixed;
+      font-size: 16px;
+      font-family: 'Press Start 2P', monospace;
+      pointer-events: none;
+      z-index: 2000;
+      animation: float-up 1s ease-out forwards;
+    }
+
+    .float-text.damage {
+      color: #e94560;
+    }
+
+    .float-text.heal {
+      color: #4ae945;
+    }
+
+    @keyframes float-up {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-60px); }
+    }
+
+    /* Game over overlay */
+    #game-over {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+    }
+
+    #game-over.hidden {
+      display: none;
+    }
+
+    #game-over-content {
+      text-align: center;
+    }
+
+    #game-over-title {
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+
+    #game-over-art {
+      font-size: 48px;
+      margin-bottom: 24px;
+    }
+
+    #game-over-score {
+      font-size: 12px;
+      margin-bottom: 32px;
+      color: #a8a8a8;
+    }
+
+    #play-again-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 12px 24px;
+      background: #0f3460;
+      color: #eee;
+      border: 3px solid #1a5276;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 1px;
+    }
+
+    #play-again-btn:hover {
+      background: #1a5276;
+      border-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <!-- HUD -->
+  <div id="hud">
+    <span id="health-display">HP 20/20</span>
+    <span id="title">SCOUNDREL</span>
+    <span id="deck-display">Deck: 44</span>
+  </div>
+
+  <!-- Room -->
+  <div id="room-label">THE ROOM</div>
+  <div id="room">
+    <!-- room cards rendered here by JS -->
+  </div>
+
+  <!-- Middle area: weapon + drop zones -->
+  <div id="middle">
+    <div id="weapon-area">
+      <div id="weapon-label">NO WEAPON</div>
+      <div id="weapon-slot">
+        <!-- equipped weapon + slain pile rendered here -->
+      </div>
+    </div>
+    <div id="drop-zones">
+      <!-- drop zone targets rendered here by JS based on dragged card -->
+    </div>
+  </div>
+
+  <!-- Action bar -->
+  <div id="action-bar">
+    <button id="avoid-btn" disabled>AVOID ROOM</button>
+    <span id="turn-info"></span>
+  </div>
+
+  <!-- Game over overlay -->
+  <div id="game-over" class="hidden">
+    <div id="game-over-content">
+      <div id="game-over-title"></div>
+      <div id="game-over-art"></div>
+      <div id="game-over-score"></div>
+      <button id="play-again-btn">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <script>
+    // JS goes here — added in later tasks
+  </script>
+</body>
+</html>

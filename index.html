@@ -776,6 +776,8 @@
     document.addEventListener('pointerup', onPointerUp);
 
     function handleDrop(card, cardIndex, action) {
+      // Once a card is played, this room is entered (can't avoid)
+      state.lastRoomAvoided = false;
       // Remove card from room
       state.room.splice(cardIndex, 1);
       state.cardsPickedThisTurn++;
@@ -859,13 +861,33 @@
     }
 
     async function endTurn() {
-      // Placeholder — implemented in Task 6
       state.potionUsedThisTurn = false;
       state.cardsPickedThisTurn = 0;
+
+      // If dungeon is empty and no cards left in room, victory
+      if (state.dungeon.length === 0 && state.room.length === 0) {
+        endGame(true);
+        return;
+      }
+
       render();
       await delay(400);
       await dealRoom();
       render();
+    }
+
+    function avoidRoom() {
+      if (state.lastRoomAvoided || state.cardsPickedThisTurn > 0) return;
+
+      // Put all room cards at bottom of dungeon
+      state.dungeon.unshift(...state.room);
+      state.room = [];
+      state.lastRoomAvoided = true;
+      state.potionUsedThisTurn = false;
+      state.cardsPickedThisTurn = 0;
+
+      render();
+      dealRoom();
     }
 
     function endGame(victory) {
@@ -890,6 +912,8 @@
     }
 
     startGame();
+    document.getElementById('avoid-btn').addEventListener('click', avoidRoom);
+    document.getElementById('play-again-btn').addEventListener('click', startGame);
   </script>
 </body>
 </html>

@@ -891,11 +891,39 @@
     }
 
     function endGame(victory) {
-      // Placeholder — implemented in Task 7
       state.gameOver = true;
-      state.score = victory ? state.health : state.health;
-      document.getElementById('game-over-title').textContent = victory ? 'VICTORY' : 'YOU DIED';
-      document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
+
+      if (victory) {
+        // Score = remaining health
+        state.score = state.health;
+        // Bonus: if health is 20 and last card was a potion
+        if (state.health === 20 && state.lastCardWasPotion) {
+          state.score = 20 + state.lastPotionValue;
+        }
+        document.getElementById('game-over-title').textContent = 'VICTORY';
+        document.getElementById('game-over-title').style.color = '#4ae945';
+        document.getElementById('game-over-art').textContent = '👑';
+        document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
+      } else {
+        // Death: score = health - remaining monsters in dungeon and room
+        let remainingMonsters = 0;
+        for (const card of state.dungeon) {
+          if (cardType(card) === 'monster') {
+            remainingMonsters += cardValue(card);
+          }
+        }
+        for (const card of state.room) {
+          if (cardType(card) === 'monster') {
+            remainingMonsters += cardValue(card);
+          }
+        }
+        state.score = state.health - remainingMonsters;
+        document.getElementById('game-over-title').textContent = 'YOU DIED';
+        document.getElementById('game-over-title').style.color = '#e94560';
+        document.getElementById('game-over-art').textContent = '💀';
+        document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
+      }
+
       render();
       document.getElementById('game-over').classList.remove('hidden');
     }

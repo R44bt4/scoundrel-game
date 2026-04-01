@@ -601,6 +601,45 @@
     }
 
     // ============================================
+    // GAME FLOW
+    // ============================================
+
+    async function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function dealRoom() {
+      const needed = 4 - state.room.length;
+      for (let i = 0; i < needed; i++) {
+        if (state.dungeon.length === 0) break;
+        const card = state.dungeon.pop();
+        state.room.push(card);
+        render();
+        // Animate the last added card
+        const roomEl = document.getElementById('room');
+        const lastCard = roomEl.lastElementChild;
+        lastCard.classList.add('flipping');
+        await delay(200);
+      }
+      render();
+      updateDropZones(null);
+    }
+
+    function updateDropZones(draggedCard) {
+      const dropZones = document.getElementById('drop-zones');
+      dropZones.innerHTML = '';
+      if (!draggedCard) {
+        // Show empty state
+        const placeholder = document.createElement('div');
+        placeholder.className = 'drop-zone';
+        placeholder.textContent = 'DRAG A CARD';
+        dropZones.appendChild(placeholder);
+        return;
+      }
+      // Populated in Task 5
+    }
+
+    // ============================================
     // INIT
     // ============================================
 
@@ -608,6 +647,7 @@
       initState();
       document.getElementById('game-over').classList.add('hidden');
       render();
+      dealRoom();
     }
 
     startGame();

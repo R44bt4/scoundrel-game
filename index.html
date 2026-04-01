@@ -452,7 +452,165 @@
   </div>
 
   <script>
-    // JS goes here — added in later tasks
+    // ============================================
+    // GAME STATE
+    // ============================================
+
+    const SUITS = {
+      CLUBS: '♣', SPADES: '♠', DIAMONDS: '♦', HEARTS: '♥'
+    };
+
+    const FACE_VALUES = { J: 11, Q: 12, K: 13, A: 14 };
+
+    function cardValue(card) {
+      return typeof card.rank === 'number' ? card.rank : FACE_VALUES[card.rank];
+    }
+
+    function cardLabel(card) {
+      return typeof card.rank === 'number' ? String(card.rank) : card.rank;
+    }
+
+    function cardType(card) {
+      if (card.suit === SUITS.DIAMONDS) return 'weapon';
+      if (card.suit === SUITS.HEARTS) return 'potion';
+      return 'monster';
+    }
+
+    function buildDungeon() {
+      const cards = [];
+      // Black suits: all ranks 2-10, J, Q, K, A
+      const blackSuits = [SUITS.CLUBS, SUITS.SPADES];
+      const allRanks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
+      for (const suit of blackSuits) {
+        for (const rank of allRanks) {
+          cards.push({ suit, rank });
+        }
+      }
+      // Red suits: only 2-10 (face cards and aces removed)
+      const redSuits = [SUITS.DIAMONDS, SUITS.HEARTS];
+      const redRanks = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+      for (const suit of redSuits) {
+        for (const rank of redRanks) {
+          cards.push({ suit, rank });
+        }
+      }
+      return cards;
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    let state = {};
+
+    function initState() {
+      state = {
+        health: 20,
+        dungeon: shuffle(buildDungeon()),
+        room: [],
+        discard: [],
+        weapon: null,
+        weaponSlain: [],       // monsters slain by current weapon
+        weaponLastSlain: null,  // value of last monster slain by weapon
+        lastRoomAvoided: false,
+        potionUsedThisTurn: false,
+        cardsPickedThisTurn: 0,
+        gameOver: false,
+        score: null,
+        lastCardWasPotion: false,
+        lastPotionValue: 0
+      };
+    }
+
+    // ============================================
+    // RENDERING
+    // ============================================
+
+    function createCardElement(card) {
+      const el = document.createElement('div');
+      const type = cardType(card);
+      el.className = `card ${type}`;
+      el.innerHTML = `
+        <div class="card-value">${cardLabel(card)}</div>
+        <div class="card-suit">${card.suit}</div>
+        <div class="card-type">${type}</div>
+      `;
+      el.dataset.suit = card.suit;
+      el.dataset.rank = card.rank;
+      el.dataset.type = type;
+      return el;
+    }
+
+    function render() {
+      // HUD
+      document.getElementById('health-display').textContent = `HP ${state.health}/20`;
+      document.getElementById('deck-display').textContent = `Deck: ${state.dungeon.length}`;
+
+      // Room
+      const roomEl = document.getElementById('room');
+      roomEl.innerHTML = '';
+      for (const card of state.room) {
+        const el = createCardElement(card);
+        roomEl.appendChild(el);
+      }
+
+      // Weapon area
+      const weaponSlot = document.getElementById('weapon-slot');
+      const weaponLabel = document.getElementById('weapon-label');
+      weaponSlot.innerHTML = '';
+      if (state.weapon) {
+        weaponLabel.textContent = 'WEAPON';
+        const wEl = document.createElement('div');
+        wEl.className = 'weapon-card';
+        wEl.innerHTML = `
+          <div class="card-value">${cardLabel(state.weapon)}</div>
+          <div class="card-suit">${state.weapon.suit}</div>
+        `;
+        weaponSlot.appendChild(wEl);
+        for (const slain of state.weaponSlain) {
+          const sEl = document.createElement('div');
+          sEl.className = 'slain-monster';
+          sEl.textContent = `${slain.suit}${cardLabel(slain)}`;
+          weaponSlot.appendChild(sEl);
+        }
+        if (state.weaponLastSlain !== null) {
+          const cEl = document.createElement('div');
+          cEl.id = 'weapon-constraint';
+          cEl.textContent = `MAX: ${state.weaponLastSlain}`;
+          weaponSlot.appendChild(cEl);
+        }
+      } else {
+        weaponLabel.textContent = 'NO WEAPON';
+      }
+
+      // Turn info
+      const turnInfo = document.getElementById('turn-info');
+      if (state.room.length > 0 && state.cardsPickedThisTurn < 3) {
+        turnInfo.textContent = `${state.cardsPickedThisTurn}/3`;
+      } else {
+        turnInfo.textContent = '';
+      }
+
+      // Avoid button
+      const avoidBtn = document.getElementById('avoid-btn');
+      avoidBtn.disabled = state.lastRoomAvoided || state.cardsPickedThisTurn > 0 || state.room.length === 0 || state.gameOver;
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+
+    function startGame() {
+      initState();
+      document.getElementById('game-over').classList.add('hidden');
+      render();
+    }
+
+    startGame();
   </script>
 </body>
 </html>

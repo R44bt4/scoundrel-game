@@ -731,9 +731,21 @@
       cursor: not-allowed;
     }
 
-    #turn-info {
+    #menu-btn {
+      font-family: 'Press Start 2P', monospace;
       font-size: 8px;
-      color: #888;
+      padding: 8px 16px;
+      background: #0f3460;
+      color: #eee;
+      border: 2px solid #1a5276;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 1px;
+    }
+
+    #menu-btn:hover {
+      background: #1a5276;
+      border-color: #2980b9;
     }
 
     #new-game-btn {
@@ -990,13 +1002,9 @@
         padding: 8px 10px;
       }
 
-      #avoid-btn, #new-game-btn {
+      #avoid-btn, #new-game-btn, #menu-btn {
         font-size: 6px;
         padding: 6px 10px;
-      }
-
-      #turn-info {
-        font-size: 6px;
       }
 
       .float-text {
@@ -1225,13 +1233,9 @@
         padding: 3px 12px;
       }
 
-      #avoid-btn, #new-game-btn {
+      #avoid-btn, #new-game-btn, #menu-btn {
         font-size: 5px;
         padding: 4px 8px;
-      }
-
-      #turn-info {
-        font-size: 5px;
       }
 
       .float-text {
@@ -1459,7 +1463,7 @@
   <!-- Action bar -->
   <div id="action-bar">
     <button id="avoid-btn" disabled>AVOID ROOM</button>
-    <span id="turn-info"></span>
+    <button id="menu-btn">MAIN MENU</button>
     <button id="new-game-btn">NEW GAME</button>
   </div>
 
@@ -1611,12 +1615,7 @@
       }
 
       // Turn info
-      const turnInfo = document.getElementById('turn-info');
-      if (state.room.length > 0 && state.cardsPickedThisTurn < 3) {
-        turnInfo.textContent = `${state.cardsPickedThisTurn}/3`;
-      } else {
-        turnInfo.textContent = '';
-      }
+      // turn counter removed — main menu button in its place
 
       // Avoid button
       const avoidBtn = document.getElementById('avoid-btn');
@@ -2042,6 +2041,10 @@
 
     // In-game
     document.getElementById('avoid-btn').addEventListener('click', avoidRoom);
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      showStartScreen();
+      fetchStats();
+    });
     document.getElementById('new-game-btn').addEventListener('click', newGameFromBar);
     document.getElementById('play-again-btn').addEventListener('click', playAgain);
 

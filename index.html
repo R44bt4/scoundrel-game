@@ -76,6 +76,9 @@
     #game-area {
       max-width: 700px;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     /* Room */
@@ -189,17 +192,7 @@
       animation: card-flip 0.3s ease-out;
     }
 
-    /* Middle area */
-    #middle {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      padding: 8px 16px;
-      max-width: 700px;
-      width: 100%;
-      min-height: 180px;
-    }
-
+    /* Weapon + Drop zones */
     #weapon-area {
       display: flex;
       flex-direction: column;
@@ -275,6 +268,7 @@
       gap: 8px;
       justify-content: center;
       min-width: 180px;
+      padding: 8px 16px;
     }
 
     .drop-zone {
@@ -550,12 +544,7 @@
         font-size: 5px;
       }
 
-      #middle {
-        gap: 12px;
-        padding: 4px 8px;
-        min-height: 140px;
-        flex-wrap: wrap;
-      }
+      /* drop zones + weapon area adjustments for portrait mobile */
 
       #weapon-area {
         min-width: 80px;
@@ -635,41 +624,54 @@
       }
 
       #hud {
-        font-size: 7px;
-        padding: 4px 12px;
+        font-size: 6px;
+        padding: 3px 10px;
       }
 
       #title {
-        font-size: 9px;
+        font-size: 8px;
+        letter-spacing: 1px;
       }
 
-      /* Side-by-side: room left, weapon+drops right */
+      #stats-bar {
+        font-size: 5px;
+        padding: 2px 10px;
+        gap: 16px;
+      }
+
+      /* Side-by-side: room | actions | weapon */
       #game-area {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: center;
         max-width: 100%;
-        gap: 0;
-      }
-
-      #room-section {
+        width: 100%;
+        gap: 4px;
+        padding: 2px 8px;
         flex: 1;
       }
 
+      #room-section {
+        flex: 0 0 auto;
+      }
+
       #room-label {
-        margin-top: 2px;
+        margin-top: 0;
         font-size: 5px;
       }
 
       #room {
-        gap: 5px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
         padding: 2px 4px;
         min-height: auto;
       }
 
       .card {
-        width: 48px;
-        height: 70px;
+        width: 52px;
+        height: 72px;
       }
 
       .card .card-value {
@@ -677,7 +679,7 @@
       }
 
       .card .card-suit {
-        font-size: 13px;
+        font-size: 14px;
         margin: 1px 0;
       }
 
@@ -685,38 +687,45 @@
         font-size: 4px;
       }
 
-      #middle {
-        gap: 8px;
-        padding: 2px 8px;
-        min-height: auto;
-        flex-direction: column;
-        flex: 0 0 auto;
-        align-items: center;
+      /* Drop zones in the middle */
+      #drop-zones {
+        flex: 1;
+        min-width: 120px;
+        max-width: 240px;
+        gap: 6px;
+        justify-content: center;
+        padding: 4px 8px;
       }
 
+      .drop-zone {
+        padding: 12px 14px;
+        font-size: 7px;
+      }
+
+      /* Weapon area on the right */
       #weapon-area {
+        flex: 0 0 auto;
         min-width: auto;
-        flex-direction: row;
-        gap: 8px;
+        flex-direction: column;
+        gap: 4px;
         align-items: center;
       }
 
       #weapon-label {
         font-size: 5px;
-        margin-bottom: 0;
-        writing-mode: horizontal-tb;
+        margin-bottom: 2px;
       }
 
       #weapon-slot {
         min-height: auto;
-        flex-direction: row;
-        gap: 4px;
+        flex-direction: column;
+        gap: 2px;
         align-items: center;
       }
 
       .weapon-card {
-        width: 48px;
-        height: 70px;
+        width: 52px;
+        height: 72px;
       }
 
       .weapon-card .card-value {
@@ -724,30 +733,19 @@
       }
 
       .weapon-card .card-suit {
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .slain-monster {
-        width: 44px;
+        width: 48px;
         font-size: 5px;
         height: 16px;
-        margin-top: 0;
-        margin-left: -8px;
+        margin-top: -2px;
       }
 
       #weapon-constraint {
         font-size: 5px;
-        margin-top: 0;
-      }
-
-      #drop-zones {
-        min-width: 140px;
-        gap: 3px;
-      }
-
-      .drop-zone {
-        padding: 6px 8px;
-        font-size: 6px;
+        margin-top: 2px;
       }
 
       #action-bar {
@@ -817,16 +815,16 @@
       </div>
     </div>
 
-    <!-- Middle area: weapon + drop zones -->
-    <div id="middle">
-      <div id="weapon-area">
-        <div id="weapon-label">NO WEAPON</div>
-        <div id="weapon-slot">
-          <!-- equipped weapon + slain pile rendered here -->
-        </div>
-      </div>
-      <div id="drop-zones">
-        <!-- drop zone targets rendered here by JS based on dragged card -->
+    <!-- Drop zones (middle in landscape) -->
+    <div id="drop-zones">
+      <!-- drop zone targets rendered here by JS based on dragged card -->
+    </div>
+
+    <!-- Weapon area (right in landscape) -->
+    <div id="weapon-area">
+      <div id="weapon-label">NO WEAPON</div>
+      <div id="weapon-slot">
+        <!-- equipped weapon + slain pile rendered here -->
       </div>
     </div>
   </div>

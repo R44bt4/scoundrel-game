@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "scoundrel",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "3509", "-d", "/Users/jtaus/Scaundrel"],
+      "port": 3509
+    }
+  ]
+}

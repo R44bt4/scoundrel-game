@@ -61,60 +61,108 @@
       margin-bottom: 48px;
     }
 
-    /* Pixel art cave entrance */
+    /* Pixel art rocky cave entrance */
     .pixel-cave {
-      width: 120px;
-      height: 100px;
+      width: 140px;
+      height: 120px;
       position: relative;
-      margin-bottom: 48px;
+      margin-bottom: 20px;
     }
 
-    .pixel-cave .cave-outer {
-      width: 120px;
-      height: 100px;
-      background: #2a2a2a;
-      border-radius: 60px 60px 4px 4px;
-      border: 4px solid #3a3a3a;
+    .pixel-cave .cave-body {
+      width: 140px;
+      height: 120px;
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
-    .pixel-cave .cave-inner {
-      width: 88px;
-      height: 80px;
-      background: #0a0a12;
-      border-radius: 44px 44px 0 0;
+    /* Jagged rocky exterior — stacked irregular shapes */
+    .pixel-cave .rock-base {
+      width: 140px;
+      height: 96px;
+      background: #4a4540;
+      border-radius: 16px 40px 0 0;
       position: absolute;
       bottom: 0;
-      left: 12px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+      box-shadow: inset -4px 0 0 #3a3530, inset 4px 0 0 #3e3935;
     }
 
-    .pixel-cave .cave-rocks-left {
-      width: 16px;
+    .pixel-cave .rock-top {
+      width: 96px;
+      height: 46px;
+      background: #524d46;
+      border-radius: 8px 32px 0 0;
+      position: absolute;
+      top: 0;
+      left: 14px;
+      box-shadow: inset 0 4px 0 #5a554e;
+    }
+
+    .pixel-cave .rock-bump-l {
+      width: 34px;
+      height: 28px;
+      background: #3e3935;
+      border-radius: 10px 4px 0 0;
+      position: absolute;
+      bottom: 64px;
+      left: 0;
+    }
+
+    .pixel-cave .rock-bump-r {
+      width: 38px;
+      height: 34px;
+      background: #46413c;
+      border-radius: 4px 14px 0 0;
+      position: absolute;
+      bottom: 54px;
+      right: 0;
+    }
+
+    .pixel-cave .rock-detail-1 {
+      width: 18px;
       height: 12px;
-      background: #333;
+      background: #56514a;
+      border-radius: 6px 3px 0 0;
       position: absolute;
       bottom: 0;
-      left: 8px;
-      border-radius: 4px 6px 0 0;
+      left: 4px;
     }
 
-    .pixel-cave .cave-rocks-right {
-      width: 20px;
+    .pixel-cave .rock-detail-2 {
+      width: 24px;
       height: 16px;
-      background: #2e2e2e;
+      background: #56514a;
+      border-radius: 3px 8px 0 0;
       position: absolute;
       bottom: 0;
-      right: 6px;
-      border-radius: 6px 4px 0 0;
+      right: 2px;
+    }
+
+    .pixel-cave .rock-detail-3 {
+      width: 14px;
+      height: 10px;
+      background: #5a554e;
+      border-radius: 4px;
+      position: absolute;
+      top: 16px;
+      left: 22px;
+    }
+
+    /* Dark opening */
+    .pixel-cave .cave-opening {
+      width: 72px;
+      height: 72px;
+      background: radial-gradient(ellipse at center 40%, #0c0c14, #050508);
+      border-radius: 36px 36px 6px 6px;
+      position: absolute;
+      bottom: 0;
+      left: 34px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.5);
     }
 
     /* Glowing eyes */
     .pixel-cave .eye {
       width: 8px;
-      height: 6px;
+      height: 5px;
       background: #e94560;
       border-radius: 50%;
       position: absolute;
@@ -123,13 +171,13 @@
     }
 
     .pixel-cave .eye-left {
-      left: 34px;
-      top: 44px;
+      left: 50px;
+      top: 68px;
     }
 
     .pixel-cave .eye-right {
-      left: 58px;
-      top: 44px;
+      left: 74px;
+      top: 68px;
     }
 
     @keyframes eye-glow {
@@ -140,14 +188,65 @@
       96% { opacity: 1; }
     }
 
-    /* Subtle fog inside cave */
-    .pixel-cave .cave-fog {
-      width: 60px;
+    /* Spider web — top-right of cave opening */
+    .pixel-cave .web {
+      position: absolute;
+      top: 18px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      overflow: visible;
+    }
+
+    .pixel-cave .web::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 32px;
+      height: 32px;
+      border-right: 2px solid rgba(255, 255, 255, 0.15);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 0 0 0 100%;
+    }
+
+    .pixel-cave .web::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 20px;
       height: 20px;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 0 0 0 100%;
+    }
+
+    .pixel-cave .web-strand {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.1);
+      transform-origin: top right;
+      transform: rotate(45deg);
+    }
+
+    /* Fog in cave */
+    .pixel-cave .cave-fog {
+      width: 50px;
+      height: 16px;
       background: radial-gradient(ellipse, rgba(233, 69, 96, 0.06), transparent);
       position: absolute;
-      bottom: 10px;
-      left: 26px;
+      bottom: 8px;
+      left: 45px;
+    }
+
+    /* Credit */
+    #start-credit {
+      font-size: 6px;
+      color: #444;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
     }
 
     #start-buttons {
@@ -847,30 +946,30 @@
       }
 
       .pixel-cave {
-        width: 90px;
-        height: 76px;
-        margin-bottom: 32px;
+        width: 100px;
+        height: 86px;
+        margin-bottom: 14px;
       }
 
-      .pixel-cave .cave-outer {
-        width: 90px;
-        height: 76px;
-        border-radius: 45px 45px 4px 4px;
-      }
+      .pixel-cave .cave-body { width: 100px; height: 86px; }
+      .pixel-cave .rock-base { width: 100px; height: 68px; border-radius: 12px 28px 0 0; }
+      .pixel-cave .rock-top { width: 68px; height: 32px; border-radius: 6px 22px 0 0; left: 10px; }
+      .pixel-cave .rock-bump-l { width: 24px; height: 20px; border-radius: 7px 3px 0 0; bottom: 46px; }
+      .pixel-cave .rock-bump-r { width: 27px; height: 24px; border-radius: 3px 10px 0 0; bottom: 38px; }
+      .pixel-cave .rock-detail-1 { width: 13px; height: 8px; left: 3px; }
+      .pixel-cave .rock-detail-2 { width: 17px; height: 11px; right: 2px; }
+      .pixel-cave .rock-detail-3 { width: 10px; height: 7px; top: 12px; left: 16px; }
+      .pixel-cave .cave-opening { width: 52px; height: 52px; border-radius: 26px 26px 4px 4px; left: 24px; }
+      .pixel-cave .eye { width: 6px; height: 4px; }
+      .pixel-cave .eye-left { left: 36px; top: 50px; }
+      .pixel-cave .eye-right { left: 52px; top: 50px; }
+      .pixel-cave .web { top: 12px; right: 10px; width: 22px; height: 22px; }
+      .pixel-cave .web::before { width: 22px; height: 22px; }
+      .pixel-cave .web::after { width: 14px; height: 14px; }
+      .pixel-cave .web-strand { height: 22px; }
+      .pixel-cave .cave-fog { width: 34px; height: 10px; left: 33px; bottom: 5px; }
 
-      .pixel-cave .cave-inner {
-        width: 66px;
-        height: 60px;
-        border-radius: 33px 33px 0 0;
-        left: 9px;
-      }
-
-      .pixel-cave .eye { width: 6px; height: 5px; }
-      .pixel-cave .eye-left { left: 25px; top: 34px; }
-      .pixel-cave .eye-right { left: 43px; top: 34px; }
-
-      .pixel-cave .cave-rocks-left { width: 12px; height: 10px; left: 6px; }
-      .pixel-cave .cave-rocks-right { width: 14px; height: 12px; right: 4px; }
+      #start-credit { font-size: 4px; margin-bottom: 16px; }
 
       .start-btn {
         font-size: 10px;
@@ -1034,31 +1133,30 @@
       }
 
       .pixel-cave {
-        width: 72px;
-        height: 56px;
-        margin-bottom: 16px;
+        width: 80px;
+        height: 68px;
+        margin-bottom: 8px;
       }
 
-      .pixel-cave .cave-outer {
-        width: 72px;
-        height: 56px;
-        border-radius: 36px 36px 4px 4px;
-        border-width: 3px;
-      }
+      .pixel-cave .cave-body { width: 80px; height: 68px; }
+      .pixel-cave .rock-base { width: 80px; height: 54px; border-radius: 10px 22px 0 0; }
+      .pixel-cave .rock-top { width: 54px; height: 26px; border-radius: 5px 18px 0 0; left: 8px; }
+      .pixel-cave .rock-bump-l { width: 19px; height: 16px; border-radius: 6px 3px 0 0; bottom: 36px; }
+      .pixel-cave .rock-bump-r { width: 22px; height: 20px; border-radius: 3px 8px 0 0; bottom: 30px; }
+      .pixel-cave .rock-detail-1 { width: 10px; height: 6px; left: 2px; }
+      .pixel-cave .rock-detail-2 { width: 14px; height: 9px; right: 1px; }
+      .pixel-cave .rock-detail-3 { width: 8px; height: 5px; top: 10px; left: 12px; }
+      .pixel-cave .cave-opening { width: 40px; height: 40px; border-radius: 20px 20px 3px 3px; left: 20px; }
+      .pixel-cave .eye { width: 5px; height: 3px; }
+      .pixel-cave .eye-left { left: 28px; top: 40px; }
+      .pixel-cave .eye-right { left: 40px; top: 40px; }
+      .pixel-cave .web { top: 10px; right: 8px; width: 18px; height: 18px; }
+      .pixel-cave .web::before { width: 18px; height: 18px; }
+      .pixel-cave .web::after { width: 11px; height: 11px; }
+      .pixel-cave .web-strand { height: 18px; }
+      .pixel-cave .cave-fog { width: 26px; height: 8px; left: 27px; bottom: 3px; }
 
-      .pixel-cave .cave-inner {
-        width: 52px;
-        height: 44px;
-        border-radius: 26px 26px 0 0;
-        left: 7px;
-      }
-
-      .pixel-cave .eye { width: 5px; height: 4px; }
-      .pixel-cave .eye-left { left: 20px; top: 26px; }
-      .pixel-cave .eye-right { left: 35px; top: 26px; }
-
-      .pixel-cave .cave-rocks-left { width: 10px; height: 8px; left: 4px; }
-      .pixel-cave .cave-rocks-right { width: 12px; height: 10px; right: 3px; }
+      #start-credit { font-size: 3px; margin-bottom: 6px; }
 
       #start-buttons {
         gap: 10px;
@@ -1279,15 +1377,22 @@
     <div id="start-title">SCOUNDREL</div>
     <div id="start-subtitle">A DUNGEON OF CARDS</div>
     <div class="pixel-cave">
-      <div class="cave-outer">
-        <div class="cave-inner"></div>
+      <div class="cave-body">
+        <div class="rock-base"></div>
+        <div class="rock-top"></div>
+        <div class="rock-bump-l"></div>
+        <div class="rock-bump-r"></div>
+        <div class="rock-detail-1"></div>
+        <div class="rock-detail-2"></div>
+        <div class="rock-detail-3"></div>
+        <div class="cave-opening"></div>
         <div class="eye eye-left"></div>
         <div class="eye eye-right"></div>
-        <div class="cave-rocks-left"></div>
-        <div class="cave-rocks-right"></div>
+        <div class="web"><div class="web-strand"></div></div>
         <div class="cave-fog"></div>
       </div>
     </div>
+    <div id="start-credit">CREATED BY RAABTA</div>
     <div id="start-buttons">
       <button class="start-btn" id="start-new-game">NEW GAME</button>
       <button class="start-btn" id="start-rules">RULES</button>

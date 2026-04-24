@@ -59,6 +59,12 @@
       color: #a8a8a8;
     }
 
+    /* Game area wrapper */
+    #game-area {
+      max-width: 700px;
+      width: 100%;
+    }
+
     /* Room */
     #room-label {
       max-width: 700px;
@@ -609,6 +615,166 @@
       }
     }
 
+    /* Landscape mobile — side-by-side layout */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body {
+        padding-bottom: 36px;
+      }
+
+      #hud {
+        font-size: 7px;
+        padding: 4px 12px;
+      }
+
+      #title {
+        font-size: 9px;
+      }
+
+      /* Side-by-side: room left, weapon+drops right */
+      #game-area {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        max-width: 100%;
+        gap: 0;
+      }
+
+      #room-section {
+        flex: 1;
+      }
+
+      #room-label {
+        margin-top: 2px;
+        font-size: 5px;
+      }
+
+      #room {
+        gap: 5px;
+        padding: 2px 4px;
+        min-height: auto;
+      }
+
+      .card {
+        width: 48px;
+        height: 70px;
+      }
+
+      .card .card-value {
+        font-size: 10px;
+      }
+
+      .card .card-suit {
+        font-size: 13px;
+        margin: 1px 0;
+      }
+
+      .card .card-type {
+        font-size: 4px;
+      }
+
+      #middle {
+        gap: 8px;
+        padding: 2px 8px;
+        min-height: auto;
+        flex-direction: column;
+        flex: 0 0 auto;
+        align-items: center;
+      }
+
+      #weapon-area {
+        min-width: auto;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+      }
+
+      #weapon-label {
+        font-size: 5px;
+        margin-bottom: 0;
+        writing-mode: horizontal-tb;
+      }
+
+      #weapon-slot {
+        min-height: auto;
+        flex-direction: row;
+        gap: 4px;
+        align-items: center;
+      }
+
+      .weapon-card {
+        width: 48px;
+        height: 70px;
+      }
+
+      .weapon-card .card-value {
+        font-size: 10px;
+      }
+
+      .weapon-card .card-suit {
+        font-size: 13px;
+      }
+
+      .slain-monster {
+        width: 44px;
+        font-size: 5px;
+        height: 16px;
+        margin-top: 0;
+        margin-left: -8px;
+      }
+
+      #weapon-constraint {
+        font-size: 5px;
+        margin-top: 0;
+      }
+
+      #drop-zones {
+        min-width: 140px;
+        gap: 3px;
+      }
+
+      .drop-zone {
+        padding: 6px 8px;
+        font-size: 6px;
+      }
+
+      #action-bar {
+        padding: 3px 12px;
+      }
+
+      #avoid-btn, #new-game-btn {
+        font-size: 5px;
+        padding: 4px 8px;
+      }
+
+      #turn-info {
+        font-size: 5px;
+      }
+
+      .float-text {
+        font-size: 10px;
+      }
+
+      #game-over-title {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      #game-over-art {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+
+      #game-over-score {
+        font-size: 8px;
+        margin-bottom: 12px;
+      }
+
+      #play-again-btn {
+        font-size: 7px;
+        padding: 6px 14px;
+      }
+    }
+
     /* Bottom padding so content isn't hidden behind fixed action bar */
     body {
       padding-bottom: 60px;
@@ -623,22 +789,26 @@
     <span id="deck-display">Deck: 44</span>
   </div>
 
-  <!-- Room -->
-  <div id="room-label">THE ROOM</div>
-  <div id="room">
-    <!-- room cards rendered here by JS -->
-  </div>
-
-  <!-- Middle area: weapon + drop zones -->
-  <div id="middle">
-    <div id="weapon-area">
-      <div id="weapon-label">NO WEAPON</div>
-      <div id="weapon-slot">
-        <!-- equipped weapon + slain pile rendered here -->
+  <!-- Game area wrapper (goes side-by-side in landscape) -->
+  <div id="game-area">
+    <div id="room-section">
+      <div id="room-label">THE ROOM</div>
+      <div id="room">
+        <!-- room cards rendered here by JS -->
       </div>
     </div>
-    <div id="drop-zones">
-      <!-- drop zone targets rendered here by JS based on dragged card -->
+
+    <!-- Middle area: weapon + drop zones -->
+    <div id="middle">
+      <div id="weapon-area">
+        <div id="weapon-label">NO WEAPON</div>
+        <div id="weapon-slot">
+          <!-- equipped weapon + slain pile rendered here -->
+        </div>
+      </div>
+      <div id="drop-zones">
+        <!-- drop zone targets rendered here by JS based on dragged card -->
+      </div>
     </div>
   </div>
 

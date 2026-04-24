@@ -59,6 +59,19 @@
       color: #a8a8a8;
     }
 
+    /* Stats bar */
+    #stats-bar {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 4px 16px;
+      font-size: 6px;
+      color: #444;
+      letter-spacing: 1px;
+    }
+
     /* Game area wrapper */
     #game-area {
       max-width: 700px;
@@ -789,6 +802,12 @@
     <span id="deck-display">Deck: 44</span>
   </div>
 
+  <!-- Stats -->
+  <div id="stats-bar">
+    <span>GAMES: <span id="stat-games">-</span></span>
+    <span>PLAYERS: <span id="stat-players">-</span></span>
+  </div>
+
   <!-- Game area wrapper (goes side-by-side in landscape) -->
   <div id="game-area">
     <div id="room-section">
@@ -1320,10 +1339,57 @@
       dealRoom();
     }
 
+    // ============================================
+    // COUNTERS (Cloudflare Worker API)
+    // ============================================
+
+    const COUNTER_API = ''; // SET THIS after deploying the Cloudflare Worker
+
+    async function fetchStats() {
+      if (!COUNTER_API) return;
+      try {
+        const res = await fetch(COUNTER_API + '/stats');
+        const data = await res.json();
+        document.getElementById('stat-games').textContent = data.games;
+        document.getElementById('stat-players').textContent = data.players;
+      } catch (e) { /* silent fail */ }
+    }
+
+    async function trackGamePlayed() {
+      if (!COUNTER_API) return;
+      try {
+        const res = await fetch(COUNTER_API + '/game', { method: 'POST' });
+        const data = await res.json();
+        document.getElementById('stat-games').textContent = data.games;
+      } catch (e) { /* silent fail */ }
+    }
+
+    async function trackVisit() {
+      if (!COUNTER_API) return;
+      if (localStorage.getItem('scoundrel_counted')) return;
+      try {
+        const res = await fetch(COUNTER_API + '/visit', { method: 'POST' });
+        const data = await res.json();
+        document.getElementById('stat-players').textContent = data.players;
+        localStorage.setItem('scoundrel_counted', '1');
+      } catch (e) { /* silent fail */ }
+    }
+
+    // Wrap startGame to track counter
+    const _originalStartGame = startGame;
+    startGame = function() {
+      _originalStartGame();
+      trackGamePlayed();
+    };
+
     startGame();
     document.getElementById('avoid-btn').addEventListener('click', avoidRoom);
     document.getElementById('play-again-btn').addEventListener('click', startGame);
     document.getElementById('new-game-btn').addEventListener('click', startGame);
+
+    // On page load: fetch stats + track unique visit
+    fetchStats();
+    trackVisit();
   </script>
 </body>
 </html>

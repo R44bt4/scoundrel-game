@@ -32,7 +32,299 @@
       touch-action: none;
     }
 
-    /* HUD */
+    /* ===================== START SCREEN ===================== */
+    #start-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9000;
+    }
+
+    #start-screen.hidden { display: none; }
+
+    #start-title {
+      font-size: 32px;
+      letter-spacing: 6px;
+      color: #eee;
+      margin-bottom: 12px;
+    }
+
+    #start-subtitle {
+      font-size: 7px;
+      color: #555;
+      letter-spacing: 3px;
+      margin-bottom: 48px;
+    }
+
+    /* Pixel art dungeon door */
+    .pixel-door {
+      width: 80px;
+      height: 100px;
+      position: relative;
+      margin-bottom: 48px;
+    }
+
+    .pixel-door .door-frame {
+      width: 80px;
+      height: 100px;
+      background: #2a2a2a;
+      border-radius: 40px 40px 0 0;
+      border: 4px solid #444;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pixel-door .door-wood {
+      width: 60px;
+      height: 76px;
+      background: #5c3a1e;
+      border-radius: 30px 30px 0 0;
+      position: absolute;
+      bottom: 0;
+      left: 6px;
+      border: 3px solid #3d2510;
+      box-shadow: inset -8px 0 0 #4a2e15, inset 8px 0 0 #6b4525;
+    }
+
+    .pixel-door .door-handle {
+      width: 8px;
+      height: 8px;
+      background: #c9a84c;
+      border-radius: 50%;
+      position: absolute;
+      right: 14px;
+      top: 52px;
+      box-shadow: 0 0 4px rgba(201, 168, 76, 0.5);
+    }
+
+    .pixel-door .door-glow {
+      width: 40px;
+      height: 50px;
+      background: radial-gradient(ellipse, rgba(233, 69, 96, 0.15), transparent);
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+    }
+
+    #start-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .start-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      padding: 14px 40px;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      min-width: 220px;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    #start-new-game {
+      background: #0f3460;
+      color: #eee;
+      border: 3px solid #1a5276;
+    }
+
+    #start-new-game:hover {
+      background: #1a5276;
+      border-color: #2980b9;
+      box-shadow: 0 0 16px rgba(41, 128, 185, 0.3);
+    }
+
+    #start-rules {
+      background: transparent;
+      color: #666;
+      border: 3px solid #333;
+    }
+
+    #start-rules:hover {
+      color: #999;
+      border-color: #555;
+    }
+
+    #start-stats {
+      position: absolute;
+      bottom: 24px;
+      font-size: 6px;
+      color: #333;
+      letter-spacing: 1px;
+      display: flex;
+      gap: 24px;
+    }
+
+    /* ===================== RULES SCREEN ===================== */
+    #rules-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 9500;
+      overflow-y: auto;
+      padding: 20px 16px 80px;
+    }
+
+    #rules-screen.hidden { display: none; }
+
+    #rules-header {
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: #eee;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    #rules-content {
+      max-width: 500px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .rule-section {
+      background: #16213e;
+      border: 3px solid #0f3460;
+      border-radius: 4px;
+      padding: 16px;
+    }
+
+    .rule-title {
+      font-size: 8px;
+      color: #e94560;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .rule-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .rule-row:last-child { margin-bottom: 0; }
+
+    .rule-text {
+      font-size: 6px;
+      color: #aaa;
+      line-height: 1.8;
+    }
+
+    /* Mini cards for rules */
+    .mini-card {
+      width: 36px;
+      height: 50px;
+      border: 2px solid #333;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 6px;
+      flex-shrink: 0;
+    }
+
+    .mini-card .mc-val { font-size: 10px; font-weight: bold; }
+    .mini-card .mc-suit { font-size: 12px; }
+
+    .mini-card.mc-monster {
+      background: #1b2d3d;
+      border-color: #2a4a5c;
+    }
+
+    .mini-card.mc-weapon {
+      background: #2d1b1b;
+      border-color: #5c2a2a;
+    }
+
+    .mini-card.mc-potion {
+      background: #2d1b1b;
+      border-color: #5c2a2a;
+    }
+
+    .mini-card.mc-back {
+      background: #16213e;
+      border-color: #0f3460;
+      color: #0f3460;
+      font-size: 14px;
+    }
+
+    /* Rule visual helpers */
+    .rule-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      width: 36px;
+      text-align: center;
+    }
+
+    .rule-cards-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin: 8px 0;
+    }
+
+    .rule-arrow {
+      font-size: 10px;
+      color: #555;
+      flex-shrink: 0;
+    }
+
+    .rule-hp {
+      color: #e94560;
+      font-size: 8px;
+      font-weight: bold;
+    }
+
+    .rule-heal {
+      color: #4ae945;
+      font-size: 8px;
+      font-weight: bold;
+    }
+
+    .rule-highlight {
+      color: #eee;
+    }
+
+    .rule-divider {
+      border: none;
+      border-top: 2px dashed #0f3460;
+      margin: 4px 0;
+    }
+
+    #rules-back-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 12px 32px;
+      background: #0f3460;
+      color: #eee;
+      border: 3px solid #1a5276;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      margin-top: 24px;
+    }
+
+    #rules-back-btn:hover {
+      background: #1a5276;
+      border-color: #2980b9;
+    }
+
+    /* ===================== HUD ===================== */
     #hud {
       width: 100%;
       max-width: 700px;
@@ -503,8 +795,77 @@
     .card.weapon { box-shadow: 0 0 8px rgba(233, 69, 96, 0.2); }
     .card.potion { box-shadow: 0 0 8px rgba(233, 69, 96, 0.2); }
 
-    /* Mobile responsive */
+    /* ===================== MOBILE PORTRAIT ===================== */
     @media (max-width: 480px) {
+      #start-title {
+        font-size: 20px;
+        letter-spacing: 4px;
+      }
+
+      #start-subtitle {
+        font-size: 5px;
+        margin-bottom: 32px;
+      }
+
+      .pixel-door {
+        width: 60px;
+        height: 76px;
+        margin-bottom: 32px;
+      }
+
+      .pixel-door .door-frame {
+        width: 60px;
+        height: 76px;
+        border-radius: 30px 30px 0 0;
+      }
+
+      .pixel-door .door-wood {
+        width: 44px;
+        height: 56px;
+        border-radius: 22px 22px 0 0;
+        left: 5px;
+      }
+
+      .pixel-door .door-handle {
+        right: 12px;
+        top: 40px;
+      }
+
+      .start-btn {
+        font-size: 10px;
+        padding: 12px 32px;
+        min-width: 200px;
+      }
+
+      #rules-header {
+        font-size: 10px;
+      }
+
+      .rule-section {
+        padding: 12px;
+      }
+
+      .rule-title {
+        font-size: 7px;
+      }
+
+      .rule-text {
+        font-size: 5px;
+      }
+
+      .mini-card {
+        width: 28px;
+        height: 40px;
+      }
+
+      .mini-card .mc-val { font-size: 8px; }
+      .mini-card .mc-suit { font-size: 10px; }
+
+      #rules-back-btn {
+        font-size: 8px;
+        padding: 10px 24px;
+      }
+
       #hud {
         font-size: 7px;
         padding: 8px 10px;
@@ -543,8 +904,6 @@
       .card .card-type {
         font-size: 5px;
       }
-
-      /* drop zones + weapon area adjustments for portrait mobile */
 
       #weapon-area {
         min-width: 80px;
@@ -617,12 +976,92 @@
       }
     }
 
-    /* Landscape mobile — side-by-side layout */
+    /* ===================== LANDSCAPE MOBILE ===================== */
     @media (max-height: 500px) and (orientation: landscape) {
       body {
         padding-bottom: 36px;
       }
 
+      /* Start screen landscape */
+      #start-title {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+
+      #start-subtitle {
+        margin-bottom: 20px;
+      }
+
+      .pixel-door {
+        width: 48px;
+        height: 60px;
+        margin-bottom: 20px;
+      }
+
+      .pixel-door .door-frame {
+        width: 48px;
+        height: 60px;
+        border-radius: 24px 24px 0 0;
+        border-width: 3px;
+      }
+
+      .pixel-door .door-wood {
+        width: 36px;
+        height: 44px;
+        border-radius: 18px 18px 0 0;
+        left: 3px;
+        border-width: 2px;
+      }
+
+      .pixel-door .door-handle {
+        width: 6px; height: 6px;
+        right: 9px; top: 32px;
+      }
+
+      #start-buttons {
+        gap: 10px;
+      }
+
+      .start-btn {
+        font-size: 9px;
+        padding: 10px 28px;
+        min-width: 180px;
+      }
+
+      /* Rules landscape */
+      #rules-screen {
+        padding: 12px 16px 60px;
+      }
+
+      #rules-header {
+        font-size: 10px;
+        margin-bottom: 12px;
+      }
+
+      #rules-content {
+        gap: 12px;
+      }
+
+      .rule-section {
+        padding: 10px;
+      }
+
+      .rule-title {
+        font-size: 6px;
+        margin-bottom: 8px;
+      }
+
+      .rule-text {
+        font-size: 5px;
+      }
+
+      #rules-back-btn {
+        font-size: 8px;
+        padding: 8px 20px;
+        margin-top: 12px;
+      }
+
+      /* Game HUD */
       #hud {
         font-size: 6px;
         padding: 3px 10px;
@@ -793,6 +1232,151 @@
   </style>
 </head>
 <body>
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen">
+    <div id="start-title">SCOUNDREL</div>
+    <div id="start-subtitle">A DUNGEON OF CARDS</div>
+    <div class="pixel-door">
+      <div class="door-frame">
+        <div class="door-wood"></div>
+        <div class="door-handle"></div>
+        <div class="door-glow"></div>
+      </div>
+    </div>
+    <div id="start-buttons">
+      <button class="start-btn" id="start-new-game">NEW GAME</button>
+      <button class="start-btn" id="start-rules">RULES</button>
+    </div>
+    <div id="start-stats">
+      <span>GAMES: <span id="start-stat-games">-</span></span>
+      <span>PLAYERS: <span id="start-stat-players">-</span></span>
+    </div>
+  </div>
+
+  <!-- ============ RULES SCREEN ============ -->
+  <div id="rules-screen" class="hidden">
+    <div id="rules-header">HOW TO PLAY</div>
+    <div id="rules-content">
+
+      <!-- Rule 1: The Dungeon -->
+      <div class="rule-section">
+        <div class="rule-title">THE DUNGEON</div>
+        <div class="rule-row">
+          <div class="rule-cards-row">
+            <div class="mini-card mc-back">?</div>
+            <div class="mini-card mc-back">?</div>
+            <div class="mini-card mc-back">?</div>
+          </div>
+          <div class="rule-arrow">&#9654;</div>
+          <div class="rule-cards-row">
+            <div class="mini-card mc-monster"><div class="mc-val">7</div><div class="mc-suit">&#9827;</div></div>
+            <div class="mini-card mc-weapon"><div class="mc-val">4</div><div class="mc-suit">&#9830;</div></div>
+            <div class="mini-card mc-potion"><div class="mc-val">5</div><div class="mc-suit">&#9829;</div></div>
+            <div class="mini-card mc-monster"><div class="mc-val">K</div><div class="mc-suit">&#9824;</div></div>
+          </div>
+        </div>
+        <div class="rule-text">44 cards. 4 are dealt face-up as <span class="rule-highlight">THE ROOM</span>.</div>
+      </div>
+
+      <!-- Rule 2: Card Types -->
+      <div class="rule-section">
+        <div class="rule-title">CARD TYPES</div>
+        <div class="rule-row">
+          <div class="mini-card mc-monster"><div class="mc-val">A</div><div class="mc-suit">&#9824;</div></div>
+          <div class="rule-text"><span class="rule-highlight">&#9827; &#9824; MONSTERS</span><br>Fight them. They hurt you.</div>
+        </div>
+        <hr class="rule-divider">
+        <div class="rule-row">
+          <div class="mini-card mc-weapon"><div class="mc-val">8</div><div class="mc-suit">&#9830;</div></div>
+          <div class="rule-text"><span class="rule-highlight">&#9830; WEAPONS</span><br>Equip to reduce monster damage.</div>
+        </div>
+        <hr class="rule-divider">
+        <div class="rule-row">
+          <div class="mini-card mc-potion"><div class="mc-val">6</div><div class="mc-suit">&#9829;</div></div>
+          <div class="rule-text"><span class="rule-highlight">&#9829; POTIONS</span><br>Heal HP. One per room.</div>
+        </div>
+      </div>
+
+      <!-- Rule 3: Your Turn -->
+      <div class="rule-section">
+        <div class="rule-title">YOUR TURN</div>
+        <div class="rule-row">
+          <div class="rule-cards-row">
+            <div class="mini-card mc-monster" style="opacity:0.3"><div class="mc-val">3</div><div class="mc-suit">&#9827;</div></div>
+            <div class="mini-card mc-weapon"><div class="mc-val">5</div><div class="mc-suit">&#9830;</div></div>
+            <div class="mini-card mc-potion"><div class="mc-val">4</div><div class="mc-suit">&#9829;</div></div>
+            <div class="mini-card mc-monster"><div class="mc-val">9</div><div class="mc-suit">&#9824;</div></div>
+          </div>
+        </div>
+        <div class="rule-text">
+          Drag <span class="rule-highlight">3 of 4</span> cards to play them.<br>
+          The last card stays for the next room.
+        </div>
+      </div>
+
+      <!-- Rule 4: Combat -->
+      <div class="rule-section">
+        <div class="rule-title">COMBAT</div>
+        <div class="rule-row">
+          <div class="rule-icon">&#9876;</div>
+          <div class="rule-text">
+            <span class="rule-highlight">BARE HANDS</span> &#8212; lose full monster value as HP<br>
+            <span class="rule-highlight">WITH WEAPON</span> &#8212; lose (monster - weapon) HP<br>
+            <span class="rule-hp">Weapon constraint: each kill must be smaller than the last</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rule 5: Weapon Rule -->
+      <div class="rule-section">
+        <div class="rule-title">WEAPON RULE</div>
+        <div class="rule-row">
+          <div class="rule-cards-row">
+            <div class="mini-card mc-weapon"><div class="mc-val">7</div><div class="mc-suit">&#9830;</div></div>
+          </div>
+          <div class="rule-arrow">&#9654;</div>
+          <div class="rule-text" style="font-size:7px;">
+            Kill <span class="rule-highlight">10</span>
+            <span class="rule-arrow">&#9654;</span> then <span class="rule-highlight">&lt;10</span>
+            <span class="rule-arrow">&#9654;</span> then <span class="rule-highlight">&lt;that</span>...
+          </div>
+        </div>
+        <div class="rule-text">
+          Equipping a new weapon discards the old one and resets the constraint.
+        </div>
+      </div>
+
+      <!-- Rule 6: Avoid Room -->
+      <div class="rule-section">
+        <div class="rule-title">AVOID ROOM</div>
+        <div class="rule-row">
+          <div class="rule-icon">&#128694;</div>
+          <div class="rule-text">
+            Skip the room &#8212; all 4 cards go to the bottom of the deck.<br>
+            <span class="rule-hp">Cannot avoid two rooms in a row.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rule 7: Victory -->
+      <div class="rule-section">
+        <div class="rule-title">VICTORY &amp; SCORE</div>
+        <div class="rule-row">
+          <div class="rule-icon">&#127942;</div>
+          <div class="rule-text">
+            Clear all rooms to win.<br>
+            <span class="rule-highlight">Score = remaining HP.</span><br>
+            <span class="rule-heal">HP reaches 0 = death.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button id="rules-back-btn">BACK</button>
+  </div>
+
+  <!-- ============ GAME ============ -->
+
   <!-- HUD -->
   <div id="hud">
     <span id="health-display">HP 20/20</span>
@@ -909,8 +1493,8 @@
         room: [],
         discard: [],
         weapon: null,
-        weaponSlain: [],       // monsters slain by current weapon
-        weaponLastSlain: null,  // value of last monster slain by weapon
+        weaponSlain: [],
+        weaponLastSlain: null,
         lastRoomAvoided: false,
         potionUsedThisTurn: false,
         cardsPickedThisTurn: 0,
@@ -1012,7 +1596,6 @@
         const card = state.dungeon.pop();
         state.room.push(card);
         render();
-        // Animate the last added card
         const roomEl = document.getElementById('room');
         const lastCard = roomEl.lastElementChild;
         lastCard.classList.add('flipping');
@@ -1039,14 +1622,12 @@
       const val = cardValue(draggedCard);
 
       if (type === 'monster') {
-        // Fight barehanded — always available
         const bareZone = document.createElement('div');
         bareZone.className = 'drop-zone valid';
         bareZone.dataset.action = 'fight-bare';
         bareZone.textContent = `FIGHT BARE (-${val} HP)`;
         dropZones.appendChild(bareZone);
 
-        // Fight with weapon — available if weapon equipped and constraint met
         if (state.weapon) {
           const canUse = state.weaponLastSlain === null || val < state.weaponLastSlain;
           const weaponVal = cardValue(state.weapon);
@@ -1090,7 +1671,7 @@
     // DRAG AND DROP
     // ============================================
 
-    let dragState = null; // { card, cardIndex, element, offsetX, offsetY, originalRect }
+    let dragState = null;
 
     function onPointerDown(e) {
       if (state.gameOver || state.dealing) return;
@@ -1101,7 +1682,6 @@
       const card = state.room[cardIndex];
       const rect = cardEl.getBoundingClientRect();
 
-      // Create a floating copy
       const clone = cardEl.cloneNode(true);
       clone.classList.add('dragging');
       clone.style.width = rect.width + 'px';
@@ -1110,7 +1690,6 @@
       clone.style.top = rect.top + 'px';
       document.body.appendChild(clone);
 
-      // Hide original
       cardEl.style.visibility = 'hidden';
 
       dragState = {
@@ -1131,7 +1710,6 @@
       dragState.element.style.left = (e.clientX - dragState.offsetX) + 'px';
       dragState.element.style.top = (e.clientY - dragState.offsetY) + 'px';
 
-      // Check hover over drop zones
       const zones = document.querySelectorAll('.drop-zone.valid');
       for (const zone of zones) {
         const rect = zone.getBoundingClientRect();
@@ -1145,7 +1723,6 @@
     function onPointerUp(e) {
       if (!dragState) return;
 
-      // Check if dropped on a valid zone
       const zones = document.querySelectorAll('.drop-zone.valid');
       let dropped = false;
       for (const zone of zones) {
@@ -1159,7 +1736,6 @@
         }
       }
 
-      // Clean up
       dragState.element.remove();
       if (!dropped) {
         dragState.originalEl.style.visibility = 'visible';
@@ -1174,9 +1750,7 @@
     document.addEventListener('pointerup', onPointerUp);
 
     function handleDrop(card, cardIndex, action) {
-      // Once a card is played, this room is entered (can't avoid)
       state.lastRoomAvoided = false;
-      // Remove card from room
       state.room.splice(cardIndex, 1);
       state.cardsPickedThisTurn++;
       state.lastCardWasPotion = false;
@@ -1199,7 +1773,6 @@
           break;
         }
         case 'equip': {
-          // Discard old weapon + slain pile
           if (state.weapon) {
             state.discard.push(state.weapon);
             state.discard.push(...state.weaponSlain);
@@ -1225,16 +1798,13 @@
         }
       }
 
-      // Check death
       if (state.health <= 0) {
         endGame(false);
         return;
       }
 
-      // Turn complete when 1 card remains in room (or 0 if room started with 1)
       if (state.room.length <= 1) {
         if (state.room.length === 0 && state.dungeon.length === 0) {
-          // No cards left anywhere — victory
           endGame(true);
         } else {
           endTurn();
@@ -1249,7 +1819,6 @@
       const el = document.createElement('div');
       el.className = `float-text ${type}`;
       el.textContent = text;
-      // Position near health display
       const hud = document.getElementById('health-display');
       const rect = hud.getBoundingClientRect();
       el.style.left = rect.left + 'px';
@@ -1262,7 +1831,6 @@
       state.potionUsedThisTurn = false;
       state.cardsPickedThisTurn = 0;
 
-      // If dungeon is empty and no cards left in room, victory
       if (state.dungeon.length === 0 && state.room.length === 0) {
         endGame(true);
         return;
@@ -1277,7 +1845,6 @@
     function avoidRoom() {
       if (state.lastRoomAvoided || state.cardsPickedThisTurn > 0) return;
 
-      // Put all room cards at bottom of dungeon
       state.dungeon.unshift(...state.room);
       state.room = [];
       state.lastRoomAvoided = true;
@@ -1292,9 +1859,7 @@
       state.gameOver = true;
 
       if (victory) {
-        // Score = remaining health
         state.score = state.health;
-        // Bonus: if health is 20 and last card was a potion
         if (state.health === 20 && state.lastCardWasPotion) {
           state.score = 20 + state.lastPotionValue;
         }
@@ -1303,17 +1868,12 @@
         document.getElementById('game-over-art').innerHTML = '<div class="pixel-chest"></div>';
         document.getElementById('game-over-score').textContent = `SCORE: ${state.score}`;
       } else {
-        // Death: score = health - remaining monsters in dungeon and room
         let remainingMonsters = 0;
         for (const card of state.dungeon) {
-          if (cardType(card) === 'monster') {
-            remainingMonsters += cardValue(card);
-          }
+          if (cardType(card) === 'monster') remainingMonsters += cardValue(card);
         }
         for (const card of state.room) {
-          if (cardType(card) === 'monster') {
-            remainingMonsters += cardValue(card);
-          }
+          if (cardType(card) === 'monster') remainingMonsters += cardValue(card);
         }
         state.score = state.health - remainingMonsters;
         document.getElementById('game-over-title').textContent = 'YOU DIED';
@@ -1327,11 +1887,34 @@
     }
 
     // ============================================
+    // SCREENS
+    // ============================================
+
+    function showStartScreen() {
+      document.getElementById('start-screen').classList.remove('hidden');
+      document.getElementById('game-over').classList.add('hidden');
+    }
+
+    function hideStartScreen() {
+      document.getElementById('start-screen').classList.add('hidden');
+    }
+
+    function showRules() {
+      document.getElementById('rules-screen').classList.remove('hidden');
+    }
+
+    function hideRules() {
+      document.getElementById('rules-screen').classList.add('hidden');
+    }
+
+    // ============================================
     // INIT
     // ============================================
 
     function startGame() {
       initState();
+      hideStartScreen();
+      hideRules();
       document.getElementById('game-over').classList.add('hidden');
       render();
       dealRoom();
@@ -1343,13 +1926,24 @@
 
     const COUNTER_API = 'https://still-shadow-2c41.jendas.workers.dev';
 
+    function updateStatDisplays(data) {
+      // Update both start screen and in-game stats
+      if (data.games !== undefined) {
+        document.getElementById('stat-games').textContent = data.games;
+        document.getElementById('start-stat-games').textContent = data.games;
+      }
+      if (data.players !== undefined) {
+        document.getElementById('stat-players').textContent = data.players;
+        document.getElementById('start-stat-players').textContent = data.players;
+      }
+    }
+
     async function fetchStats() {
       if (!COUNTER_API) return;
       try {
         const res = await fetch(COUNTER_API + '/stats');
         const data = await res.json();
-        document.getElementById('stat-games').textContent = data.games;
-        document.getElementById('stat-players').textContent = data.players;
+        updateStatDisplays(data);
       } catch (e) { /* silent fail */ }
     }
 
@@ -1358,7 +1952,7 @@
       try {
         const res = await fetch(COUNTER_API + '/game', { method: 'POST' });
         const data = await res.json();
-        document.getElementById('stat-games').textContent = data.games;
+        updateStatDisplays(data);
       } catch (e) { /* silent fail */ }
     }
 
@@ -1368,26 +1962,49 @@
       try {
         const res = await fetch(COUNTER_API + '/visit', { method: 'POST' });
         const data = await res.json();
-        document.getElementById('stat-players').textContent = data.players;
+        updateStatDisplays(data);
         localStorage.setItem('scoundrel_counted', '1');
       } catch (e) { /* silent fail */ }
     }
 
-    // Wrap startGame to track counter
-    const _originalStartGame = startGame;
-    startGame = function() {
-      _originalStartGame();
+    // NEW GAME from start screen — track counters + start
+    function newGameFromMenu() {
       trackGamePlayed();
-    };
+      trackVisit();
+      startGame();
+    }
 
-    startGame();
+    // NEW GAME during gameplay — track game counter only
+    function newGameFromBar() {
+      trackGamePlayed();
+      startGame();
+    }
+
+    // PLAY AGAIN from game over — track game counter only
+    function playAgain() {
+      trackGamePlayed();
+      startGame();
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+
+    // Start screen
+    document.getElementById('start-new-game').addEventListener('click', newGameFromMenu);
+    document.getElementById('start-rules').addEventListener('click', showRules);
+
+    // Rules screen
+    document.getElementById('rules-back-btn').addEventListener('click', hideRules);
+
+    // In-game
     document.getElementById('avoid-btn').addEventListener('click', avoidRoom);
-    document.getElementById('play-again-btn').addEventListener('click', startGame);
-    document.getElementById('new-game-btn').addEventListener('click', startGame);
+    document.getElementById('new-game-btn').addEventListener('click', newGameFromBar);
+    document.getElementById('play-again-btn').addEventListener('click', playAgain);
 
-    // On page load: fetch stats + track unique visit
+    // On page load: show start screen + fetch stats (no counters incremented)
+    showStartScreen();
     fetchStats();
-    trackVisit();
   </script>
 </body>
 </html>
